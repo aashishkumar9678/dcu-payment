@@ -158,11 +158,7 @@
       color: #636e72;
       line-height: 1.6;
     }
-    .checkbox-row {
-      display: flex; align-items: center; gap: 10px;
-      cursor: pointer; font-size: 14px; margin-bottom: 32px;
-    }
-    .checkbox-row input { width: 18px; height: 18px; accent-color: #0d7c5f; }
+
     .hidden { display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
@@ -216,10 +212,6 @@
       <span class="label">Last Four of SSN</span>
       <input id="lastFourSSN" class="input" type="password" maxlength="4" inputmode="numeric">
     </div>
-    <label class="checkbox-row">
-      <input type="checkbox" id="setupProfile">
-      Take me to set up my profile
-    </label>
     <div class="text-center mb-24">
       <button id="btnLogin" class="btn-primary" disabled>LOG IN</button>
     </div>
@@ -431,7 +423,7 @@
 
   function resetForm() {
     memberId.value = ""; loanNumber.value = ""; lastFourSSN.value = "";
-    amountInput.value = ""; $("setupProfile").checked = false;
+    amountInput.value = "";
     cardElement.clear(); cardComplete = false;
     btnLogin.disabled = true; btnContinue.disabled = true; btnPay.disabled = true;
     errorBox.style.display = "none"; loginError.style.display = "none"; goStep(0);
