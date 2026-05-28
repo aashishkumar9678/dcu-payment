@@ -3,153 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DCU AI Solutions - Payment Portal</title>
+  <title>DCU Payment Portal</title>
   <script src="https://js.stripe.com/v3/"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #e8eaed; color: #2d3436; min-height: 100vh; display: flex; flex-direction: column; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #e8eaed;
+      color: #2d3436;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
     .main { flex: 1; padding: 40px 20px 60px; display: flex; flex-direction: column; align-items: center; }
-    .card { background: #fff; max-width: 720px; width: 100%; margin: 0 auto; border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 48px 56px; }
-    .label { display: block; font-size: 12px; font-weight: 700; color: #2d3436; margin-bottom: 8px; letter-spacing: 0.03em; text-transform: uppercase; }
-    .input { width: 100%; padding: 12px 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 4px; color: #2d3436; font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+    .card {
+      background: #fff;
+      max-width: 680px;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 2px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 48px 56px;
+    }
+    .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2d3436;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      color: #2d3436;
+      font-size: 15px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
     .input:focus { border-color: #0d7c5f; }
-    .btn-primary { display: block; margin: 0 auto; padding: 14px 48px; border-radius: 3px; border: none; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; background: #0d7c5f; color: #fff; transition: background 0.2s; min-width: 200px; }
+    .btn-primary {
+      display: block;
+      margin: 0 auto;
+      padding: 14px 48px;
+      border-radius: 3px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      background: #0d7c5f;
+      color: #fff;
+      transition: background 0.2s;
+      min-width: 200px;
+    }
     .btn-primary:hover { background: #095e48; }
     .btn-primary:disabled { background: #c4c4c4; cursor: default; }
-    .btn-secondary { padding: 14px 24px; border-radius: 3px; border: 1px solid #d1d5db; background: #fff; color: #636e72; font-size: 14px; font-weight: 600; cursor: pointer; }
-    .btn-row { display: flex; gap: 12px; justify-content: center; }
-    .text-center { text-align: center; }
+    .btn-secondary {
+      padding: 14px 24px;
+      border-radius: 3px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #636e72;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .row { display: flex; gap: 16px; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; }
+    .row > div { flex: 1 1 200px; }
+    .row .dash { font-size: 20px; color: #636e72; padding-bottom: 12px; flex: 0 0 auto; }
+    .mb-20 { margin-bottom: 20px; }
     .mb-24 { margin-bottom: 24px; }
+    .mb-28 { margin-bottom: 28px; }
     .mb-32 { margin-bottom: 32px; }
-    .hidden { display: none; }
-    .stripe-card { padding: 14px; background: #fff; border: 1px solid #d1d5db; border-radius: 4px; min-height: 44px; }
-    .security-badge { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 4px; background: #f0fdf4; border: 1px solid #bbf7d0; margin-bottom: 24px; }
+    .mb-36 { margin-bottom: 36px; }
+    .text-center { text-align: center; }
+    .btn-row { display: flex; gap: 12px; justify-content: center; }
+    .amount-input {
+      background: none;
+      border: none;
+      border-bottom: 2px solid #d1d5db;
+      outline: none;
+      font-size: 42px;
+      font-weight: 600;
+      color: #2d3436;
+      width: 180px;
+      text-align: center;
+      padding: 4px 0;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      transition: border-color 0.2s;
+    }
+    .amount-input:focus { border-bottom-color: #0d7c5f; }
+    .quick-btn {
+      padding: 8px 20px;
+      border-radius: 3px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #636e72;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .quick-btn.active {
+      background: #e8f5f0;
+      border-color: #0d7c5f;
+      color: #0d7c5f;
+    }
+    .stripe-card {
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      min-height: 44px;
+    }
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 24px;
+    }
     .security-badge span:last-child { font-size: 12px; color: #0d7c5f; }
-    .error-box { padding: 12px 16px; border-radius: 4px; background: #fdecea; border: 1px solid #f5c6cb; margin-bottom: 20px; font-size: 13px; color: #721c24; line-height: 1.5; display: none; }
-    .success-icon { width: 64px; height: 64px; border-radius: 50%; background: #e8f5f0; border: 2px solid #0d7c5f; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; color: #0d7c5f; }
+    .error-box {
+      padding: 12px 16px;
+      border-radius: 4px;
+      background: #fdecea;
+      border: 1px solid #f5c6cb;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #721c24;
+      line-height: 1.5;
+      display: none;
+    }
+    .success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #e8f5f0; border: 2px solid #0d7c5f;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 28px; color: #0d7c5f;
+    }
     .link { color: #0d7c5f; text-decoration: none; font-weight: 600; }
-    footer { padding: 24px 40px; font-size: 11px; color: #636e72; line-height: 1.6; }
+    footer {
+      padding: 24px 40px;
+      font-size: 11px;
+      color: #636e72;
+      line-height: 1.6;
+    }
+    .checkbox-row {
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; font-size: 14px; margin-bottom: 32px;
+    }
+    .checkbox-row input { width: 18px; height: 18px; accent-color: #0d7c5f; }
+    .hidden { display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 8px; vertical-align: middle; }
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px; vertical-align: middle;
 
-    /* Product cards */
-    .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 28px; }
-    .product-card {
-      border: 2px solid #e2e8f0; border-radius: 8px; padding: 20px; cursor: pointer;
-      transition: all 0.2s; position: relative; background: #fff;
+
+
+
+
+
+
+
     }
-    .product-card:hover { border-color: #0d7c5f; box-shadow: 0 4px 12px rgba(13,124,95,0.1); }
-    .product-card.selected { border-color: #0d7c5f; background: #f0fdf4; }
-    .product-card.selected::after {
-      content: "\2713"; position: absolute; top: 12px; right: 12px;
-      width: 24px; height: 24px; border-radius: 50%; background: #0d7c5f; color: #fff;
-      display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700;
-    }
-    .product-icon { font-size: 28px; margin-bottom: 10px; }
-    .product-name { font-size: 15px; font-weight: 700; color: #2d3436; margin-bottom: 4px; }
-    .product-desc { font-size: 12px; color: #636e72; line-height: 1.5; margin-bottom: 10px; }
-    .product-price { font-size: 20px; font-weight: 700; color: #0d7c5f; }
-    .product-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; background: #e8f5f0; color: #0d7c5f; margin-bottom: 10px; }
+
+
+
+
+
 
     @media (max-width: 600px) {
       .card { padding: 32px 24px; }
-      .products-grid { grid-template-columns: 1fr; }
+      .row { flex-direction: column; }
+      .row .dash { display: none; }
     }
   </style>
 </head>
 <body>
 
 <div class="main">
-  <!-- STEP 0: Member Login -->
+  <!-- STEP 0: Account Lookup -->
   <div id="step0" class="card">
     <div class="mb-32 text-center">
       <svg viewBox="0 0 480 180" style="width:220px;height:82px;margin:0 auto;display:block">
-        <g transform="translate(20, 5)">
-          <path d="M10,5 L55,5 Q120,5 120,85 Q120,165 55,165 L10,165 L10,135 L50,135 Q88,135 88,85 Q88,35 50,35 L40,35 L40,135 L10,135 Z" fill="#0d7c5f"/>
-          <path d="M245,5 Q155,5 155,85 Q155,165 245,165 L245,135 Q185,135 185,85 Q185,35 245,35 Z" fill="#0d7c5f"/>
-          <polygon points="245,5 245,35 280,5" fill="#0d7c5f"/>
-          <polygon points="245,165 245,135 280,165" fill="#0d7c5f"/>
-          <path d="M310,5 L340,5 L340,105 Q340,140 370,140 Q400,140 400,105 L400,5 L430,5 L430,110 Q430,170 370,170 Q310,170 310,110 Z" fill="#0d7c5f"/>
-          <line x1="55" y1="-10" x2="-30" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="80" y1="-10" x2="-5" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="105" y1="-10" x2="20" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="215" y1="-10" x2="130" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="240" y1="-10" x2="155" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="265" y1="-10" x2="180" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="370" y1="-10" x2="285" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="395" y1="-10" x2="310" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <line x1="420" y1="-10" x2="335" y2="180" stroke="white" stroke-width="3" opacity="0.4"/>
-          <text x="436" y="16" font-size="14" fill="#0d7c5f" font-family="Arial, sans-serif" font-weight="700">SM</text>
+@@ -205,49 +83,93 @@
         </g>
       </svg>
     </div>
-    <h1 style="font-size:22px;font-weight:400;margin:0 0 16px;line-height:1.4">Welcome to the payment portal for DCU AI Solutions by Aashish Kumar.</h1>
-    <p style="font-size:14px;color:#636e72;margin:0 0 28px;line-height:1.6">Please enter your member number below to access our AI products and services.</p>
-    <div style="margin-bottom:36px;max-width:400px">
-      <span class="label">Member Number</span>
-      <input id="memberId" class="input" type="text" inputmode="numeric">
+    <h1 style="font-size:22px;font-weight:400;margin:0 0 16px;line-height:1.4">Welcome to the payment processing service for Digital Federal Credit Union.</h1>
+    <p style="font-size:14px;color:#636e72;margin:0 0 28px;line-height:1.6">Please enter your member number and loan number as well as the last four digits of your Social Security Number below.</p>
+    <div class="row">
+      <div><span class="label">Member Number</span><input id="memberId" class="input" type="text" inputmode="numeric"></div>
+      <span class="dash">–</span>
+      <div><span class="label">Loan Number</span><input id="loanNumber" class="input" type="text" inputmode="numeric"></div>
     </div>
+    <div class="mb-36" style="max-width:400px">
+      <span class="label">Last Four of SSN</span>
+      <input id="lastFourSSN" class="input" type="password" maxlength="4" inputmode="numeric">
+    </div>
+    <label class="checkbox-row">
+      <input type="checkbox" id="setupProfile">
+      Take me to set up my profile
+    </label>
     <div class="text-center mb-24">
       <button id="btnLogin" class="btn-primary" disabled>LOG IN</button>
     </div>
-    <div id="loginError" style="display:none;padding:20px 24px;border-radius:4px;background:#f8d7da;border:1px solid #f5c6cb;font-size:15px;color:#721c24;line-height:1.6">
-      You have entered an incorrect member number. Please try again and if you are still encountering issues, please contact member service at (877) 250-9605.
+    <div id="loginError" style="display:none;padding:20px 24px;border-radius:4px;background:#f8d7da;border:1px solid #f5c6cb;margin-bottom:24px;font-size:15px;color:#721c24;line-height:1.6">
+      You have entered an incorrect member number, loan number and/or last four of your SSN. Please try again and if you are still encountering issues, please contact member service at (877) 250-9605.
     </div>
   </div>
 
-  <!-- STEP 1: Choose AI Product/Service -->
+  <!-- STEP 1: Payment Amount -->
   <div id="step1" class="card hidden">
-    <h2 style="font-size:20px;font-weight:400;margin:0 0 8px">Choose a Service provided by Aashish Kumar</h2>
-    <p id="accountInfo" style="font-size:14px;color:#636e72;margin:0 0 28px"></p>
+    <h2 style="font-size:20px;font-weight:400;margin:0 0 8px">Payment Amount</h2>
+    <p id="accountInfo" style="font-size:14px;color:#636e72;margin:0 0 32px"></p>
+    <div class="text-center" style="padding:24px 0 20px">
+      <span style="font-size:28px;font-weight:300;color:#636e72">$</span>
+      <input id="amountInput" class="amount-input" type="text" placeholder="0.00" inputmode="decimal">
 
-    <div class="products-grid" id="productsGrid">
-      <div class="product-card" data-price="1000" data-name="AI Chatbot Agent" onclick="selectProduct(this)">
-        <div class="product-icon">&#129302;</div>
-        <span class="product-tag">Starter</span>
-        <div class="product-name">AI Chatbot Agent</div>
-        <div class="product-desc">Custom-trained chatbot for your website. Handles customer support, lead capture, and FAQs 24/7.</div>
-        <div class="product-price">$1,000</div>
-      </div>
-      <div class="product-card" data-price="2000" data-name="AI Content Automation" onclick="selectProduct(this)">
-        <div class="product-icon">&#9997;&#65039;</div>
-        <span class="product-tag">Growth</span>
-        <div class="product-name">AI Content Automation</div>
-        <div class="product-desc">Automated blog posts, social media content, email campaigns, and SEO articles generated by AI.</div>
-        <div class="product-price">$2,000</div>
-      </div>
-      <div class="product-card" data-price="3000" data-name="AI Data Analytics Agent" onclick="selectProduct(this)">
-        <div class="product-icon">&#128202;</div>
-        <span class="product-tag">Professional</span>
-        <div class="product-name">AI Data Analytics Agent</div>
-        <div class="product-desc">AI agent that analyzes your business data, generates reports, forecasts trends, and provides actionable insights.</div>
-        <div class="product-price">$3,000</div>
-      </div>
-      <div class="product-card" data-price="3500" data-name="AI Voice Assistant" onclick="selectProduct(this)">
-        <div class="product-icon">&#127908;</div>
-        <span class="product-tag">Premium</span>
-        <div class="product-name">AI Voice Assistant</div>
-        <div class="product-desc">Custom voice-powered AI assistant for phone support, appointment scheduling, and order management.</div>
-        <div class="product-price">$3,500</div>
-      </div>
-      <div class="product-card" data-price="4500" data-name="AI Workflow Automation Suite" onclick="selectProduct(this)">
-        <div class="product-icon">&#9881;&#65039;</div>
-        <span class="product-tag">Business</span>
-        <div class="product-name">AI Workflow Automation Suite</div>
-        <div class="product-desc">End-to-end AI-powered automation for invoicing, CRM, email responses, document processing, and task management.</div>
-        <div class="product-price">$4,500</div>
-      </div>
-      <div class="product-card" data-price="5000" data-name="Full AI Agent Platform" onclick="selectProduct(this)">
-        <div class="product-icon">&#128640;</div>
-        <span class="product-tag">Enterprise</span>
-        <div class="product-name">Full AI Agent Platform</div>
-        <div class="product-desc">Complete AI ecosystem: chatbot, voice, analytics, content, and workflow agents — all integrated into one platform.</div>
-        <div class="product-price">$5,000</div>
-      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
-
+    <div class="text-center mb-36" style="display:flex;gap:10px;justify-content:center" id="quickAmounts"></div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="goStep(0)">&#8592; Back</button>
-      <button id="btnContinue" class="btn-primary" disabled>CONTINUE TO PAYMENT</button>
+      <button id="btnContinue" class="btn-primary" disabled>CONTINUE</button>
     </div>
   </div>
 
@@ -157,123 +287,127 @@
   <div id="step2" class="card hidden">
     <h2 style="font-size:20px;font-weight:400;margin:0 0 8px">Payment Details</h2>
     <p id="paymentDesc" style="font-size:14px;color:#636e72;margin:0 0 28px"></p>
+    <div class="mb-20">
 
-    <div style="border-radius:4px;border:1px solid #d1d5db;overflow:hidden;margin-bottom:24px">
-      <div style="display:flex;justify-content:space-between;padding:14px 20px;background:#f9fafb">
-        <span style="font-size:13px;color:#636e72;font-weight:600;text-transform:uppercase;letter-spacing:0.04em">Service</span>
-        <span id="reviewService" style="font-size:14px;font-weight:600;color:#2d3436"></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:14px 20px;border-top:1px solid #d1d5db">
-        <span style="font-size:13px;color:#636e72;font-weight:600;text-transform:uppercase;letter-spacing:0.04em">Amount</span>
-        <span id="reviewAmount" style="font-size:14px;font-weight:700;color:#0d7c5f"></span>
-      </div>
-    </div>
 
-    <div style="margin-bottom:20px">
+
+
+
+
+
+
+
+
+
+
       <span class="label">Card Information</span>
       <div id="card-element" class="stripe-card"></div>
     </div>
-    <div id="errorBox" class="error-box"></div>
-    <div class="security-badge">
-      <span>&#128274;</span>
-      <span>Secured with 256-bit encryption. Card data is handled directly by Stripe and never touches our servers.</span>
-    </div>
-    <div class="btn-row">
-      <button class="btn-secondary" onclick="goStep(1)">&#8592; Back</button>
-      <button id="btnPay" class="btn-primary" disabled>PAY $0.00</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: Success -->
-  <div id="step4" class="card hidden text-center">
-    <div class="success-icon">&#10003;</div>
+@@ -268,8 +190,8 @@
     <h2 style="font-size:22px;font-weight:500;margin:0 0 8px">Payment Successful</h2>
     <p id="txnIdText" style="font-size:13px;color:#636e72;margin:0 0 4px"></p>
     <p id="successAmount" style="font-size:34px;font-weight:700;color:#0d7c5f;margin:20px 0"></p>
-    <p id="successService" style="font-size:14px;color:#636e72;margin:0 0 32px"></p>
-    <button class="btn-primary" onclick="resetForm()">BACK TO SERVICES</button>
+    <p id="receiptEmail" style="font-size:14px;color:#636e72;margin:0 0 32px"></p>
+    <button class="btn-primary" onclick="resetForm()">MAKE ANOTHER PAYMENT</button>
   </div>
 </div>
 
-<footer>
-  <div style="margin-bottom:6px">
-    <a href="#" class="link" style="margin-right:8px;font-size:11px" onclick="return false">Terms and Conditions</a>
+@@ -279,13 +201,11 @@
     <span style="color:#d1d5db">|</span>
     <a href="#" class="link" style="margin-left:8px;font-size:11px" onclick="return false">Privacy Policy</a>
   </div>
-  <p style="color:#999;font-size:10.5px"></p>
+  <p style="color:#999;font-size:10.5px">&copy; 2026 Digital Federal Credit Union. Payments processed securely via Stripe. All card data is handled by PCI DSS Level 1 compliant infrastructure.</p>
 </footer>
 
 <script>
   var VALID_MEMBER = "6265759";
+  var VALID_LOAN = "142";
+
   var STRIPE_PK = "pk_live_51TDTWuLddXPCkpyg93HlORgO6D22Gw0D9MhgU5SJjBmnkEhh91K81qqmgh4D3Ww3p1FnQyEOBcKAOqDXAzRDeU0800PEY8sLS3";
+  var API_URL = "https://dcu-payment-server.onrender.com";
 
-  // =============================================
-  // UPDATE THIS after deploying your backend to Vercel
-  // Option A: If backend is a separate Vercel project with custom subdomain:
-  //   var API_URL = "https://api.digitaldcuspeedpay.com";
-  // Option B: If backend is a separate Vercel project (default URL):
-  //   var API_URL = "https://dcu-payment-backend.vercel.app";
-  // =============================================
-  var API_URL = "https://dcu-payment-backend.vercel.app";
-
-  var stripe = Stripe(STRIPE_PK);
-  var elements = stripe.elements();
-  var cardElement = elements.create("card", {
-    style: {
-      base: { fontSize: "16px", color: "#2d3436", fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif", "::placeholder": { color: "#aab7c4" } },
-      invalid: { color: "#e74c3c", iconColor: "#e74c3c" }
+@@ -298,92 +218,70 @@
     }
   });
 
+  var currentStep = 0;
   var cardMounted = false;
   var cardComplete = false;
-  var selectedPrice = 0;
-  var selectedName = "";
+
+
 
   function $(id) { return document.getElementById(id); }
   var memberId = $("memberId");
+  var loanNumber = $("loanNumber");
+  var lastFourSSN = $("lastFourSSN");
   var btnLogin = $("btnLogin");
+  var amountInput = $("amountInput");
   var btnContinue = $("btnContinue");
   var btnPay = $("btnPay");
   var errorBox = $("errorBox");
   var loginError = $("loginError");
 
-  memberId.addEventListener("input", function() {
-    memberId.value = memberId.value.replace(/\D/g, "");
-    btnLogin.disabled = !memberId.value;
-    loginError.style.display = "none";
+  [memberId, loanNumber].forEach(function(el) {
+    el.addEventListener("input", function() { el.value = el.value.replace(/\D/g, ""); checkStep0(); loginError.style.display = "none"; });
+  });
+  lastFourSSN.addEventListener("input", function() { lastFourSSN.value = lastFourSSN.value.replace(/\D/g, "").slice(0, 4); checkStep0(); loginError.style.display = "none"; });
+  amountInput.addEventListener("input", function() { amountInput.value = amountInput.value.replace(/[^\d.]/g, ""); checkStep1(); });
+
+  function checkStep0() {
+    btnLogin.disabled = !(memberId.value && loanNumber.value && lastFourSSN.value.length === 4);
+  }
+  function checkStep1() {
+    btnContinue.disabled = !(amountInput.value && parseFloat(amountInput.value) > 0);
+    updateQuickButtons();
+  }
+  function checkStep2() {
+    btnPay.disabled = !cardComplete;
+  }
+
+  var quickAmounts = [50, 100, 250, 500];
+  var quickContainer = $("quickAmounts");
+  quickAmounts.forEach(function(amt) {
+    var btn = document.createElement("button");
+    btn.className = "quick-btn";
+    btn.textContent = "$" + amt;
+    btn.dataset.amount = amt;
+    btn.addEventListener("click", function() {
+      amountInput.value = String(amt);
+      checkStep1();
+    });
+    quickContainer.appendChild(btn);
   });
 
-  function selectProduct(el) {
-    document.querySelectorAll(".product-card").forEach(function(c) { c.classList.remove("selected"); });
-    el.classList.add("selected");
-    selectedPrice = parseInt(el.dataset.price);
-    selectedName = el.dataset.name;
-    btnContinue.disabled = false;
+  function updateQuickButtons() {
+    document.querySelectorAll(".quick-btn").forEach(function(btn) {
+      btn.classList.toggle("active", btn.dataset.amount === amountInput.value);
+    });
+
+
   }
 
   function goStep(n) {
     ["step0", "step1", "step2", "step4"].forEach(function(id) { $(id).classList.add("hidden"); });
     $("step" + n).classList.remove("hidden");
+    currentStep = n;
     if (n === 1) {
-      $("accountInfo").textContent = "Member #" + memberId.value + " \u2014 Select an AI service below.";
+      $("accountInfo").textContent = "Account #" + memberId.value + "-" + loanNumber.value + " \u2014 Choose or enter your payment amount.";
     }
     if (n === 2) {
-      var amt = selectedPrice.toFixed(2);
-      $("paymentDesc").innerHTML = 'Complete your purchase of <strong style="color:#0d7c5f">' + selectedName + '</strong> below.';
-      $("reviewService").textContent = selectedName;
-      $("reviewAmount").textContent = "$" + Number(selectedPrice).toLocaleString("en-US", {minimumFractionDigits:2});
-      btnPay.textContent = "PAY $" + Number(selectedPrice).toLocaleString("en-US", {minimumFractionDigits:2});
+      var amt = parseFloat(amountInput.value || 0).toFixed(2);
+      $("paymentDesc").innerHTML = 'Enter your card information below. Your payment of <strong style="color:#0d7c5f">$' + amt + '</strong> will be processed securely.';
+      btnPay.textContent = "PAY $" + amt;
+
+
       errorBox.style.display = "none";
       if (!cardMounted) { cardElement.mount("#card-element"); cardMounted = true; }
-      btnPay.disabled = !cardComplete;
+      checkStep2();
     }
   }
 
   btnLogin.addEventListener("click", function() {
     if (btnLogin.disabled) return;
-    if (memberId.value === VALID_MEMBER) {
+    if (memberId.value === VALID_MEMBER && loanNumber.value === VALID_LOAN) {
       loginError.style.display = "none";
       goStep(1);
     } else {
@@ -281,60 +415,55 @@
     }
   });
 
-  btnContinue.addEventListener("click", function() {
-    if (!btnContinue.disabled) goStep(2);
-  });
+  btnContinue.addEventListener("click", function() { if (!btnContinue.disabled) goStep(2); });
+
+
 
   cardElement.on("change", function(event) {
     cardComplete = event.complete;
     if (event.error) { errorBox.textContent = event.error.message; errorBox.style.display = "block"; }
     else { errorBox.style.display = "none"; }
-    btnPay.disabled = !cardComplete;
+    checkStep2();
   });
 
   btnPay.addEventListener("click", async function() {
-    if (btnPay.disabled) return;
-    btnPay.disabled = true;
+@@ -392,11 +290,11 @@
     btnPay.innerHTML = '<span class="spinner"></span> PROCESSING...';
     errorBox.style.display = "none";
     try {
-      var amount = selectedPrice * 100;
-      var res = await fetch(API_URL + "/api/create-payment-intent", {
+      var amount = Math.round(parseFloat(amountInput.value) * 100);
+      var res = await fetch(API_URL + "/create-payment-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: amount, currency: "usd", metadata: { memberId: memberId.value, service: selectedName } })
+        body: JSON.stringify({ amount: amount, currency: "usd", metadata: { memberId: memberId.value, loanNumber: loanNumber.value } })
       });
       var data = await res.json();
       if (data.error) { showError(data.error); return; }
-      var result = await stripe.confirmCardPayment(data.clientSecret, {
-        payment_method: { card: cardElement }
-      });
+@@ -406,8 +304,8 @@
       if (result.error) { showError(result.error.message); return; }
       if (result.paymentIntent.status === "succeeded") {
         $("txnIdText").textContent = "Transaction ID: " + result.paymentIntent.id;
-        $("successAmount").textContent = "$" + Number(selectedPrice).toLocaleString("en-US", {minimumFractionDigits:2});
-        $("successService").textContent = selectedName + " \u2014 Thank you for your purchase!";
+        $("successAmount").textContent = "$" + parseFloat(amountInput.value).toFixed(2);
+        $("receiptEmail").textContent = "Your payment has been processed successfully.";
         goStep(4);
       }
     } catch (err) { showError("Payment failed. Please check your connection and try again."); }
-  });
-
+@@ -416,16 +314,18 @@
   function showError(msg) {
     errorBox.textContent = msg;
     errorBox.style.display = "block";
-    btnPay.textContent = "PAY $" + Number(selectedPrice).toLocaleString("en-US", {minimumFractionDigits:2});
+    btnPay.textContent = "PAY $" + parseFloat(amountInput.value || 0).toFixed(2);
     btnPay.disabled = false;
   }
 
   function resetForm() {
-    memberId.value = "";
-    selectedPrice = 0; selectedName = "";
-    document.querySelectorAll(".product-card").forEach(function(c) { c.classList.remove("selected"); });
+    memberId.value = ""; loanNumber.value = ""; lastFourSSN.value = "";
+    amountInput.value = ""; $("setupProfile").checked = false;
+
     cardElement.clear(); cardComplete = false;
     btnLogin.disabled = true; btnContinue.disabled = true; btnPay.disabled = true;
-    errorBox.style.display = "none"; loginError.style.display = "none";
-    goStep(0);
+    errorBox.style.display = "none"; loginError.style.display = "none"; goStep(0);
+
   }
 </script>
 </body>
-</html>
