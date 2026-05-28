@@ -75,8 +75,8 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .row { display: flex; gap: 16px; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; }
-    .row > div { flex: 1 1 200px; }
+    .row { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px; flex-wrap: nowrap; }
+    .row > div { flex: 1 1 0; min-width: 0; }
     .row .dash { font-size: 20px; color: #636e72; padding-bottom: 12px; flex: 0 0 auto; }
     .mb-20 { margin-bottom: 20px; }
     .mb-24 { margin-bottom: 24px; }
@@ -169,9 +169,16 @@
       margin-right: 8px; vertical-align: middle;
     }
     @media (max-width: 600px) {
-      .card { padding: 32px 24px; }
-      .row { flex-direction: column; }
-      .row .dash { display: none; }
+      .main { padding: 20px 12px 40px; }
+      .card { padding: 24px 20px; }
+      .row { gap: 8px; margin-bottom: 16px; }
+      .row .dash { font-size: 16px; padding-bottom: 10px; }
+      .mb-36 { margin-bottom: 20px; }
+      .mb-32 { margin-bottom: 20px; }
+      .input { padding: 10px 12px; font-size: 14px; }
+      .label { font-size: 11px; margin-bottom: 6px; }
+      h1 { font-size: 18px !important; margin-bottom: 10px !important; }
+      p { font-size: 13px !important; margin-bottom: 20px !important; }
     }
   </style>
 </head>
